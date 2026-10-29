@@ -106,6 +106,7 @@ Follow the Join Me brand direction:
 - Consistent spacing, typography, borders, and rounded corners
 - Responsive desktop and mobile layouts
 - Accessible labels and keyboard-friendly controls
+- **Strict Color Token Enforcement**: Never use arbitrary hex utility classes (e.g., `bg-[#4776E6]`, `text-[#243B80]`, `border-[#E2E8F0]`). Always use semantic Tailwind classes (`bg-primary`, `text-navy`, `border-border`, `bg-background`, `bg-subtle`, `text-muted-foreground`, etc.) as documented in `docs/color_rule.md`.
 
 Use shadcn/ui as a foundation and customize its appearance to match Join Me.
 
