@@ -14,13 +14,14 @@ Join Me is a new, independent project.
 
 Use the following technologies:
 
-- React
+- React 19
 - TypeScript
 - Vite
-- Tailwind CSS
-- shadcn/ui
+- Tailwind CSS v4
+- shadcn/ui (powered by Radix UI primitives & Class Variance Authority)
 - React Router
 - React Hook Form and Zod for form validation when useful
+- Lucide React for iconography
 
 Inspect the installed versions and existing configuration before changing dependencies.
 
@@ -64,18 +65,19 @@ Rules:
 
 Follow these documents:
 
-- `docs/PROJECT_BRIEF.md` — product goals and scope.
-- `docs/FRONTEND_STRUCTURE.md` — folder responsibilities.
+- `docs/PROJECT_BRIEF.md` — product goals, features, and UI standards.
+- `docs/FRONTEND_STRUCTURE.md` — folder responsibilities and shadcn component tree.
 - `docs/FRONTEND_ARCHITECTURE.md` — routing and user flows.
+- `docs/color_rule.md` — official color palette, component mapping, and strict token rules.
 
 Use lightweight feature-based architecture.
 
 - Keep feature-specific code inside its feature folder.
-- Keep shared UI components inside `src/components/`.
+- Keep shared shadcn/ui primitives inside `src/components/ui/`.
+- Keep shared layout shells in `src/components/layout/` and brand assets in `src/components/brand/`.
 - Keep routing and application setup inside `src/app/`.
 - Keep shared utilities inside `src/lib/`.
 - Keep feature-specific types near their feature.
-- Create files when they are needed; do not create empty placeholders for every planned folder.
 - Avoid oversized components and unnecessary abstractions.
 
 ## 6. UI-Only Restrictions
@@ -96,21 +98,18 @@ Forms may demonstrate client-side validation and UI feedback, but must never pre
 
 Never store passwords in local storage.
 
-## 7. Design Rules
+## 7. Design & Component Rules (shadcn/ui Standard)
 
-Follow the Join Me brand direction:
+Follow the Join Me brand direction and component uniformity:
 
-- Clean, modern, friendly interface
-- Blue and purple brand accents
-- Dark navy text and light neutral backgrounds
-- Consistent spacing, typography, borders, and rounded corners
-- Responsive desktop and mobile layouts
-- Accessible labels and keyboard-friendly controls
+- **shadcn/ui Primitives**: Always use standard components from `src/components/ui/` (`<Card>`, `<Button>`, `<Input>`, `<Label>`, `<Avatar>`, `<Separator>`, `<Textarea>`) on feature pages. Do not write raw unstyled HTML elements (`<input>`, `<button>`) with custom styling.
+- **Clean, Modern, Friendly Interface**: Blue-purple accents, dark navy text, light neutral backgrounds.
+- **Consistent Rounded Radii**:
+  - `rounded-2xl` for cards, panels, and modal containers.
+  - `rounded-xl` for interactive controls (buttons, inputs, pills).
 - **Strict Color Token Enforcement**: Never use arbitrary hex utility classes (e.g., `bg-[#4776E6]`, `text-[#243B80]`, `border-[#E2E8F0]`). Always use semantic Tailwind classes (`bg-primary`, `text-navy`, `border-border`, `bg-background`, `bg-subtle`, `text-muted-foreground`, etc.) as documented in `docs/color_rule.md`.
-
-Use shadcn/ui as a foundation and customize its appearance to match Join Me.
-
-Do not leave the default Vite or library demonstration styling in place.
+- **Inputs & Focus States**: Inputs use `<Input>` with neutral borders (`border-border`) and primary brand focus rings (`focus-visible:ring-ring`).
+- **Logo Consistency**: Always use the centralized `<Logo />` component (`src/components/brand/Logo.tsx`).
 
 ## 8. Implementation Workflow
 

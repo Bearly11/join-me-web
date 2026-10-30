@@ -2,140 +2,118 @@
 
 ## 1. Architecture Choice
 
-Use lightweight feature-based architecture.
+Join Me uses a lightweight feature-based architecture with **shadcn/ui** providing the core design system primitives.
 
-Each feature owns its own pages, components, types, and related UI logic. Shared components are placed in a common location.
-
-The following is the target structure. Inspect the actual repository and create files gradually rather than creating every file immediately.
+Each feature owns its own pages, components, types, and mock data. Shared layouts, brand elements, and reusable shadcn/ui components are located in `src/components/`.
 
 ```text
 join-me-web/
-├── AGENTS.md
+├── AGENTS.md                          # AI agent behavior and development rules
+├── README.md                          # Project overview, tech stack, and setup
+├── components.json                    # shadcn/ui configuration
+├── package.json                       # Dependencies & scripts
+├── tsconfig.json                      # TypeScript root config
+├── tsconfig.app.json                  # Application TypeScript config
+├── tsconfig.node.json                 # Vite TypeScript config
+├── vite.config.ts                     # Vite + Tailwind v4 config
+├── index.html                         # Entry HTML
 ├── docs/
-│   ├── PROJECT_BRIEF.md
-│   ├── FRONTEND_STRUCTURE.md
-│   └── FRONTEND_ARCHITECTURE.md
+│   ├── PROJECT_BRIEF.md               # Product brief, features, and UI goals
+│   ├── FRONTEND_STRUCTURE.md          # File & folder structure (this file)
+│   ├── FRONTEND_ARCHITECTURE.md       # Routing, state flow, and boundary rules
+│   └── color_rule.md                  # Strict color tokens and styling rules
 ├── public/
-│   └── images/
-├── src/
-│   ├── app/
-│   │   ├── router.tsx
-│   │   └── providers.tsx
-│   ├── components/
-│   │   ├── brand/
-│   │   ├── layout/
-│   │   └── ui/
-│   ├── features/
-│   │   ├── auth/
-│   │   │   ├── components/
-│   │   │   ├── pages/
-│   │   │   ├── schemas/
-│   │   │   └── types.ts
-│   │   ├── chat/
-│   │   │   ├── components/
-│   │   │   ├── data/
-│   │   │   ├── pages/
-│   │   │   └── types.ts
-│   │   ├── rooms/
-│   │   │   ├── components/
-│   │   │   ├── data/
-│   │   │   ├── pages/
-│   │   │   └── types.ts
-│   │   ├── profile/
-│   │   │   ├── components/
-│   │   │   └── pages/
-│   │   └── settings/
-│   │       ├── components/
-│   │       └── pages/
-│   ├── lib/
-│   │   ├── utils.ts
-│   │   └── mock-data.ts
-│   ├── types/
-│   ├── App.tsx
-│   ├── main.tsx
-│   └── index.css
-├── package.json
-├── index.html
-├── vite.config.ts
-├── tsconfig.json
-└── components.json
+│   └── images/                        # Static assets
+└── src/
+    ├── app/                           # App initialization & routing
+    │   ├── router.tsx                 # Route declarations
+    │   └── providers.tsx              # Context providers
+    ├── assets/                        # Bundled media & logos
+    │   └── Join Me Community Logo.png
+    ├── components/                    # Shared components
+    │   ├── brand/                     # Logo & brand identity
+    │   │   └── Logo.tsx
+    │   ├── layout/                    # Layout shells
+    │   │   ├── AppLayout.tsx          # Main application layout with sidebar
+    │   │   └── AuthLayout.tsx         # Authentication split layout
+    │   └── ui/                        # shadcn/ui primitives (Radix UI + CVA)
+    │       ├── avatar.tsx             # <Avatar>, <AvatarImage>, <AvatarFallback>
+    │       ├── button.tsx             # <Button> (default, secondary, outline, ghost)
+    │       ├── card.tsx               # <Card>, <CardHeader>, <CardTitle>, <CardContent>, etc.
+    │       ├── input.tsx              # <Input>
+    │       ├── label.tsx              # <Label>
+    │       ├── separator.tsx          # <Separator>
+    │       └── textarea.tsx           # <Textarea>
+    ├── features/                      # Feature modules
+    │   ├── auth/                      # Authentication feature
+    │   │   ├── components/            # Auth-specific components
+    │   │   └── pages/                 # Auth pages
+    │   │       ├── ForgotPasswordPage.tsx
+    │   │       ├── LoginPage.tsx
+    │   │       ├── RegisterPage.tsx
+    │   │       └── ResetPasswordPage.tsx
+    │   ├── chat/                      # Direct messaging feature
+    │   │   ├── components/            # Chat bubbles, conversation list, message composer
+    │   │   └── pages/
+    │   │       └── ChatPage.tsx
+    │   ├── profile/                   # User profile feature
+    │   │   ├── components/            # Profile-specific components
+    │   │   └── pages/
+    │   │       └── ProfilePage.tsx    # Profile view & edit with shadcn Card/Input/Button
+    │   ├── rooms/                     # Group rooms feature
+    │   │   ├── components/            # Room cards, member lists
+    │   │   └── pages/
+    │   │       └── RoomsPage.tsx
+    │   └── settings/                  # App settings feature
+    │       ├── components/            # Setting rows, toggles
+    │       └── pages/
+    │           └── SettingsPage.tsx
+    ├── lib/                           # Shared utility libraries
+    │   ├── utils.ts                   # cn() helper (clsx + tailwind-merge)
+    │   └── mock-data.ts               # Sample mock conversations, rooms, users
+    ├── types/                         # Shared cross-feature TypeScript types
+    ├── App.tsx                        # Root application component
+    ├── main.tsx                       # React DOM entry point
+    └── index.css                      # Tailwind v4 theme, brand colors, and semantic tokens
 ```
-
-Some files may differ depending on the installed Vite and TypeScript versions.
 
 ## 2. Folder Responsibilities
 
-### `src/app/`
+### `src/components/ui/` (shadcn/ui)
+Houses customized, accessible UI primitives built with Radix UI and Class Variance Authority. All components are styled using Join Me's uniform design tokens (`bg-primary`, `text-navy`, `border-border`, `rounded-xl`, `rounded-2xl`).
 
-Application setup, route definitions, and shared providers.
+**Every feature page MUST use these components instead of unstyled HTML elements.**
 
-### `src/components/`
+### `src/components/brand/`
+Contains the standard `<Logo />` component. All authentication and application headers consume this component to guarantee uniform brand representation.
 
-Reusable components shared across features.
+### `src/components/layout/`
+- `AppLayout.tsx`: The primary authenticated/main application frame featuring the persistent navigation sidebar, user badge, and content viewport.
+- `AuthLayout.tsx`: The authentication layout providing a balanced visual split with the Join Me brand artwork and centered card forms.
 
-- `brand/`: Join Me logo and wordmark.
-- `layout/`: shared layouts and navigation.
-- `ui/`: shadcn/ui components.
-
-### `src/features/auth/`
-
-Registration, login, forgot-password, and reset-password screens.
-
-### `src/features/chat/`
-
-Conversation list, message panel, message composer, and direct-message UI.
-
-### `src/features/rooms/`
-
-Room list, room conversation, and room-related UI.
-
-### `src/features/profile/`
-
-Profile display and profile editing UI.
-
-### `src/features/settings/`
-
-Settings pages and preference controls.
+### `src/features/<feature>/`
+Encapsulates each domain (`auth`, `chat`, `rooms`, `profile`, `settings`):
+- `pages/`: Page-level components bound to routes in `router.tsx`.
+- `components/`: Sub-components specific to that feature (e.g. `MessageComposer`, `ConversationItem`).
 
 ### `src/lib/`
+- `utils.ts`: Contains `cn()` utility function combining `clsx` and `tailwind-merge`.
+- `mock-data.ts`: Centralizes mock conversations, messages, channels, and profile data so mock updates remain consistent across screens.
 
-Small shared utilities and mock-data helpers.
+## 3. Styling & Uniform Color Enforcement
 
-### `src/types/`
-
-Types shared by multiple features. Keep feature-specific types inside their feature folders.
-
-## 3. Vite Starter Cleanup
-
-Inspect the repository for default starter code such as:
-
-- `src/App.tsx`
-- `src/App.css`
-- `src/assets/react.svg`
-- `public/vite.svg`
-
-These are examples; not every project will contain all of them.
-
-After approval:
-
-1. Replace the default counter and logo demo in `App.tsx`.
-2. Remove unused starter CSS and image assets.
-3. Replace starter global styling with Join Me styles.
-4. Add the agreed routing structure.
-5. Fix imports and references after removals.
-6. Confirm the application still builds.
-
-Preserve necessary configuration and entry points, including `package.json`, lockfiles, `index.html`, `vite.config.ts`, TypeScript configuration, and `src/main.tsx`.
-
-Do not delete configuration files just to make the project look clean.
+1. **Tokens Defined Centrally:** All color tokens are declared in `@theme` inside `src/index.css`.
+2. **Strict Class Usage:**
+   - Primary buttons & links: `bg-primary`, `text-primary`, `hover:bg-primary-hover`
+   - Brand headings & accents: `text-navy`, `bg-navy`, `text-purple`
+   - Surfaces & Cards: `bg-surface`, `bg-card`, `border-border`
+   - Inputs: `bg-surface`, `border-border`, `focus-visible:ring-ring`
+3. **No Arbitrary Hex:** Never write `bg-[#4776E6]` or `text-[#243B80]` in any file.
+4. **Radii Standard:** `rounded-2xl` for cards and major containers; `rounded-xl` for buttons, inputs, and badges.
 
 ## 4. File Organization Rules
 
-- Use clear filenames such as `LoginPage.tsx`, `RegisterPage.tsx`, and `ChatPage.tsx`.
-- Keep pages focused on composing components.
-- Keep feature-specific components inside their feature folder.
-- Share components only when they genuinely have a shared responsibility.
-- Do not create empty folders or files without a current purpose.
-- Do not create backend service layers or API clients in the UI-only phase.
-
-This structure is a guide, not a requirement to create every listed file at once.
+- Use PascalCase filenames for React components: `ProfilePage.tsx`, `ChatPage.tsx`, `Button.tsx`.
+- Keep pages focused on layout and composing shared shadcn/ui and feature components.
+- Keep state local to features or lifted to providers when cross-cutting.
+- Do not introduce arbitrary external styling libraries or backend API wrappers during this UI phase.

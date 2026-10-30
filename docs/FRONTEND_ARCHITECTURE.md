@@ -2,9 +2,9 @@
 
 ## 1. Architecture Overview
 
-Join Me uses lightweight feature-based React architecture.
+Join Me uses lightweight feature-based React architecture with **shadcn/ui** providing accessible, customizable UI components.
 
-React renders the UI, React Router selects the page, feature components implement the screen, and shared components provide consistent styling.
+React renders the UI, React Router selects the page, feature components implement the screen, and shared shadcn/ui components (`src/components/ui/`) provide uniform styling and behavior across all pages.
 
 During this phase, pages use mock data and local React state. There is no backend.
 
@@ -22,13 +22,13 @@ App.tsx
   v
 React Router (src/app/router.tsx)
   |
-  +--> Authentication pages
+  +--> Authentication pages (AuthLayout)
   |      +--> Login
   |      +--> Register
   |      +--> Forgot password
   |      +--> Reset password
   |
-  +--> Main application pages
+  +--> Main application pages (AppLayout)
          +--> Chat
          +--> Rooms
          +--> Profile
@@ -38,7 +38,7 @@ React Router (src/app/router.tsx)
         Feature components
                 |
                 v
-        Shared UI components
+        Shared shadcn/ui components (Card, Button, Input, Label, Avatar, Separator)
                 |
                 v
         Mock data + local React state
@@ -46,17 +46,17 @@ React Router (src/app/router.tsx)
 
 ## 3. Route Plan
 
-| Path | Page |
-|---|---|
-| `/login` | Login |
-| `/register` | Register |
-| `/forgot-password` | Forgot password |
-| `/reset-password` | Reset password UI |
-| `/chat` | Main chat |
-| `/rooms` | Room list |
-| `/rooms/:roomId` | Room conversation |
-| `/profile` | Profile |
-| `/settings` | Settings |
+| Path | Page | Layout |
+|---|---|---|
+| `/login` | Login | `AuthLayout` |
+| `/register` | Register | `AuthLayout` |
+| `/forgot-password` | Forgot password | `AuthLayout` |
+| `/reset-password` | Reset password UI | `AuthLayout` |
+| `/chat` | Main chat | `AppLayout` |
+| `/rooms` | Room list | `AppLayout` |
+| `/rooms/:roomId` | Room conversation | `AppLayout` |
+| `/profile` | Profile | `AppLayout` |
+| `/settings` | Settings | `AppLayout` |
 
 Route paths may be refined during implementation, but links must remain consistent.
 
@@ -65,7 +65,7 @@ These routes are for navigation only. They do not provide real authentication or
 ## 4. Registration Flow
 
 ```text
-Register page
+Register page (uses shadcn Card, Input, Label, Button)
   -> Fill form
   -> Validate fields in the browser
   -> Show demo feedback
@@ -77,7 +77,7 @@ No account is created and no data is sent to a server.
 ## 5. Login Flow
 
 ```text
-Login page
+Login page (uses shadcn Card, Input, Label, Button)
   -> Enter email and password
   -> Validate form fields
   -> Show a clear demo result
@@ -102,7 +102,7 @@ No email is sent. No reset token is verified. No real password is changed.
 ## 7. Chat Flow
 
 ```text
-Chat page
+Chat page (uses shadcn Card, Input/Textarea, Button, Avatar, Separator)
   -> Load sample conversations
   -> Select a conversation
   -> Display sample messages
@@ -111,14 +111,14 @@ Chat page
   -> Update local demo state
 ```
 
-The layout should include a conversation sidebar, selected conversation header, message history, and composer.
+The layout includes a conversation sidebar, selected conversation header, message history, and composer.
 
 Provide an empty state when no conversation is selected.
 
 ## 8. Rooms Flow
 
 ```text
-Rooms page
+Rooms page (uses shadcn Card, Button, Avatar, Separator)
   -> Show sample rooms
   -> Select a room
   -> Display room details and sample messages
@@ -131,7 +131,7 @@ Do not implement real membership, invitations, presence, or calls yet.
 ## 9. Profile and Settings Flow
 
 ```text
-Profile page
+Profile page (uses shadcn Card, Avatar, Input, Label, Button, Separator)
   -> Display sample user information
   -> Open edit form
   -> Edit local form state
@@ -150,27 +150,29 @@ Do not add Redux or Zustand until a real need is demonstrated.
 
 ## 11. Forms
 
-React Hook Form and Zod may be used for form state and validation.
+React Hook Form and Zod may be used for form state and validation alongside shadcn `<Input>` and `<Label>`.
 
 - Use clear labels and validation messages.
 - Provide keyboard-accessible controls.
 - Keep success and error feedback honest about being demo-only.
 - Never store passwords in local storage.
 
-## 12. Styling
+## 12. Styling and Component System (shadcn/ui Standard)
 
-Use Tailwind CSS and shadcn/ui.
+Join Me establishes **shadcn/ui** as its primary component architecture alongside Tailwind CSS v4.
 
-Maintain consistent brand colors, typography, spacing, border styles, and responsive behavior.
-
-Customize the components to match Join Me. Do not retain the default Vite demo screen or starter styling.
+- **Component Primitives**: Build all screens using shared primitives in `src/components/ui/` (`Card`, `Button`, `Input`, `Label`, `Avatar`, `Separator`, `Textarea`, etc.) rather than unstyled HTML elements.
+- **Uniform Design Tokens**: All styling relies strictly on centralized semantic theme tokens configured in `src/index.css` (e.g. `bg-primary`, `text-navy`, `border-border`, `bg-surface`, `bg-background`).
+- **No Arbitrary Hex Utility Classes**: Arbitrary hex classes such as `bg-[#4776E6]` or `text-[#243B80]` are prohibited.
+- **Consistent Rounded Radii**: Containers and cards use `rounded-2xl`; interactive controls (buttons, inputs) use `rounded-xl`.
+- **Accessibility & Focus**: Controls must maintain high visual contrast, visible focus rings (`focus-visible:ring-ring`), and descriptive labels via shadcn's Radix UI-backed components.
 
 ## 13. First Implementation Milestone
 
 After the user approves the plan:
 
 1. Inspect the installed dependencies and project configuration.
-2. Identify and safely remove the Vite demo screen and unused starter assets.
+2. Ensure shadcn/ui primitives and theme tokens are set up.
 3. Establish Join Me global styles and brand components.
 4. Configure React Router.
 5. Add the agreed route shells.

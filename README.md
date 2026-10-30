@@ -1,75 +1,66 @@
-# React + TypeScript + Vite
+# Join Me — Web Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Join Me is a communication application designed to connect people in one place through direct messaging, rooms, profile management, and future voice/video calling.
 
-Currently, two official plugins are available:
+**Tagline:** *One place. Everyone connected.*
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19**
+- **TypeScript**
+- **Vite**
+- **Tailwind CSS v4** (`@tailwindcss/vite`)
+- **shadcn/ui** (customized with Radix UI primitives & Class Variance Authority)
+- **React Router v7**
+- **Lucide React** (icons)
+- **React Hook Form & Zod** (client-side form validation)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Design System & Brand Palette
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+The application uses a strict, uniform color and component system defined in `src/index.css`:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Brand Navy:** `#243B80` (`text-navy`, `bg-navy`)
+- **Brand Blue (Primary):** `#4776E6` (`bg-primary`, `text-primary`, `focus:ring-primary`)
+- **Primary Hover:** `#3B66CF` (`hover:bg-primary-hover`)
+- **Brand Purple (Accent):** `#8056D9` (`text-purple`, `bg-purple`)
+- **Background:** `#F7F8FC` (`bg-background`)
+- **Surface / Cards:** `#FFFFFF` (`bg-surface`, `bg-card`)
+- **Borders & Dividers:** `#E2E8F0` (`border-border`)
+- **Subtle Surface:** `#EEF2FF` (`bg-subtle`, `bg-secondary`)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+All pages use **shadcn/ui** components located in `src/components/ui/` (`Card`, `Button`, `Input`, `Label`, `Avatar`, `Separator`, `Textarea`) styled with uniform tokens. Arbitrary hex values are strictly prohibited.
 
+---
+
+## Project Documentation
+
+Detailed guidelines are maintained in the [`docs/`](./docs) directory:
+
+- [**PROJECT_BRIEF.md**](./docs/PROJECT_BRIEF.md) — Product overview, UI requirements, technology, and scope.
+- [**FRONTEND_STRUCTURE.md**](./docs/FRONTEND_STRUCTURE.md) — Folder structure and component placement conventions.
+- [**FRONTEND_ARCHITECTURE.md**](./docs/FRONTEND_ARCHITECTURE.md) — Routing plan, application flow, and backend boundaries.
+- [**color_rule.md**](./docs/color_rule.md) — Official color palette, shadcn component mapping, and strict token rules.
+- [**AGENT.md**](./AGENT.md) — Agent development instructions and safety constraints.
+
+---
+
+## Getting Started
+
+### Development
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### Type Check & Build
+```bash
+npm run build
+```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+### Lint
+```bash
+npm run lint
 ```
